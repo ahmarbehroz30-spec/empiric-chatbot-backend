@@ -1378,20 +1378,20 @@
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
             try {
-                // 3. Forward request parameters to active endpoint pipeline
-                const response = await fetch('http://127.0.0.1:5000/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ message: messageText })
-                });
+                // // 3. Forward request parameters to active endpoint pipeline
+const response = await fetch('https://empiric-chatbot-backend.onrender.com/chat', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ message: messageText })
+});
 
-                const data = await response.json();
+const data = await response.json();
 
-                // Clear placeholder loader
-                const tempMsg = document.getElementById('loading-msg');
-                if (tempMsg) tempMsg.remove();
+// Clear placeholder loader
+const tempMsg = document.getElementById('loading-msg');
+if (tempMsg) tempMsg.remove();
 
                 // 4. Extract content and output clean parsed strings
                 const botMessageDiv = document.createElement('div');
