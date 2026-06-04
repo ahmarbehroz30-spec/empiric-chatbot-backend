@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empiric Enterprises | Trading, Engineering & General Order Suppliers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:wght@300;400;600;700&family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Chatbot Container Fixed at Bottom Right */
+#chat-widget-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Toggle Button Style - Mustard Theme */
+#chat-toggle-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #b37d14; /* Mustard Color */
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+#chat-toggle-btn:hover {
+    background-color: #c98d19;
+    transform: scale(1.05);
+}
+
+/* Chat Window Box - Matched with Website Dark Blue Banner */
+#chat-window {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 350px;
+    height: 450px;
+    background-color: #111c24; /* Exact Website Banner Dark Blue */
+    border: 1px solid #23323d;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.chat-hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Chat Header - Darker Blue with Mustard Top Border */
+#chat-header {
+    background-color: #0b1218; /* Darker tone of banner blue */
+    color: #ffffff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #b37d14; /* Mustard Bottom Accent */
+}
+
+#chat-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#close-chat-btn {
+    background: none;
+    border: none;
+    color: #aaaaaa;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#close-chat-btn:hover {
+    color: #b37d14;
+}
+
+/* Chat Messages Area - Clean Dark Blue Background */
+#chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #111c24; /* Website Banner Dark Blue */
+}
+
+/* Message Bubbles */
+.message {
+    padding: 10px 14px;
+    border-radius: 8px;
+    max-width: 80%;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #ffffff;
+    word-wrap: break-word;
+}
+
+/* Text formatting features */
+.message h1, .message h2, .message h3 {
+    margin: 5px 0;
+    color: #b37d14;
+}
+.message h1 { font-size: 18px; }
+.message h2 { font-size: 16px; }
+.message h3 { font-size: 14px; }
+.message strong { color: #ffffff; }
+
+/* Bot Message Styling - Slightly lighter blue than background */
+.bot-message {
+    background-color: #1a2630; 
+    border: 1px solid #283744;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+/* User Message Styling - Matching Mustard Accent */
+.user-message {
+    background-color: #b37d14;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+/* Chat Input Bar */
+#chat-input-container {
+    padding: 12px;
+    background-color: #0b1218;
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #1a2630;
+}
+
+#chat-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #23323d;
+    border-radius: 6px;
+    background-color: #16222b;
+    color: #ffffff;
+    outline: none;
+}
+
+#chat-input:focus {
+    border-color: #b37d14;
+}
+
+#chat-input::placeholder {
+    color: #627785;
+}
+
+/* Send Button Style */
+#send-btn {
+    background-color: #b37d14;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+#send-btn:hover {
+    background-color: #c98d19;
+}
+        /* ==========================================
+           CSS STYLING (100% Identity Mapping)
+           ========================================== */
+        :root {
+            --brand-gold: #CE8D2A;     /* Exact Warm Industrial Gold */
+            --brand-dark: #0E1726;     /* Exact Charcoal Dark Blue/Black */
+            --text-gray: #4A5568;      
+            --bg-light: #F7FAFC;       
+            --white: #FFFFFF;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--brand-dark);
+            line-height: 1.6;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Top Compliance Stripe */
+        .top-bar {
+            background-color: var(--brand-dark);
+            color: #E2E8F0;
+            font-size: 0.82rem;
+            padding: 10px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--brand-gold);
+        }
+
+        .top-bar-left span, .top-bar-right span {
+            margin-right: 20px;
+        }
+
+        /* Navigation Header */
+        header {
+            background-color: var(--white);
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            height: 75px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-family: 'Michroma', sans-serif;
+            font-size: 1.8rem;
+            color: var(--brand-dark);
+            line-height: 0.9;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .logo-text .sub-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.25rem;
+            color: var(--brand-dark);
+            font-weight: 300;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+            line-height: 1;
+        }
+
+        .logo-text .tagline {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            color: var(--brand-dark);
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            margin-top: 6px;
+            padding-top: 4px;
+            border-top: 1px solid rgba(14, 23, 38, 0.15);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--brand-dark);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--brand-gold);
+        }
+
+        /* Industrial Banner Base */
+        .page-banner {
+            background: linear-gradient(rgba(14, 23, 38, 0.9), rgba(14, 23, 38, 0.9)), url('main image.jfif') no-repeat center center/cover;
+            color: var(--white);
+            padding: 80px 8%;
+            text-align: left;
+            border-bottom: 5px solid var(--brand-gold);
+        }
+
+        .page-banner h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.6rem;
+            text-transform: uppercase;
+            color: var(--brand-gold);
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .page-banner p {
+            font-size: 0.95rem;
+            color: #A0AEC0;
+            font-weight: 500;
+        }
+
+        /* Intro Section */
+        .intro-section {
+            padding: 60px 8%;
+            background-color: var(--white);
+        }
+
+        .intro-section h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            color: var(--brand-dark);
+            position: relative;
+            padding-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .intro-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--brand-gold);
+        }
+
+        .intro-section p {
+            color: var(--text-gray);
+            font-size: 1.05rem;
+            margin-top: 15px;
+            text-align: justify;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        /* 9-Segment Grid Layout */
+        .category-section {
+            background-color: var(--bg-light);
+            padding: 70px 8%;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .category-card {
+            background: var(--white);
+            border: 1px solid #E2E8F0;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-card:hover {
+            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+            transform: translateY(-5px);
+            border-bottom: 3px solid var(--brand-gold);
+        }
+
+        .card-img {
+            height: 190px;
+            background-color: #E2E8F0;
+            width: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+        
+        .category-card:hover .card-img {
+            transform: scale(1.03);
+        }
+
+        .card-content {
+            padding: 22px;
+            flex-grow: 1;
+        }
+
+        .card-content h4 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.25rem;
+            color: var(--brand-dark);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-content p {
+            font-size: 0.88rem;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* Core Capabilities Checklist Section - 3 Column Layout for Perfect 9-Point Alignment */
+        .checklist-section {
+            padding: 70px 8%;
+            background-color: var(--white);
+        }
+
+        .checklist-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 15px;
+            background-color: var(--bg-light);
+            border-left: 4px solid var(--brand-gold);
+            border-radius: 0 4px 4px 0;
+            font-size: 0.95rem;
+            color: var(--brand-dark);
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            transform: translateX(5px);
+            background-color: #EDF2F7;
+        }
+
+        .checklist-item::before {
+            content: "✔";
+            color: var(--brand-gold);
+            font-weight: 900;
+            font-size: 1.1rem;
+        }
+
+        /* FAQ Section Styling */
+        .faq-section {
+            padding: 70px 8%;
+            background-color: var(--bg-light);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 35px auto 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .faq-item {
+            background-color: var(--white);
+            border: 1px solid #E2E8F0;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .faq-trigger {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            text-align: left;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.15rem;
+            color: var(--brand-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+            color: var(--brand-gold);
+            transition: transform 0.3s ease;
+            font-weight: 600;
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
+            padding: 0 20px;
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .faq-item.active {
+            border-left: 4px solid var(--brand-gold);
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        /* Reg & Corporate Footprints Block */
+        .corporate-info {
+            background-color: var(--brand-gold);
+            color: var(--brand-dark);
+            padding: 45px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .corporate-info h4 {
+            font-family: 'Oswald', sans-serif;
+            color: var(--brand-dark);
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .compliance-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .compliance-img {
+            max-height: 65px; 
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.08));
+        }
+
+        .tax-box {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tax-badge {
+            border: 2px solid var(--brand-dark);
+            padding: 10px 18px;
+            font-size: 0.88rem;
+            border-radius: 4px;
+            background-color: rgba(14, 23, 38, 0.05);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Footer Systems */
+        footer {
+            background-color: #0A0F18;
+            color: #A0AEC0;
+            padding: 60px 8% 25px 8%;
+            font-size: 0.9rem;
+            border-top: 4px solid var(--brand-gold);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 40px;
+            margin-bottom: 45px;
+        }
+
+        .footer-col p {
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .footer-col h5 {
+            font-family: 'Oswald', sans-serif;
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 22px;
+            text-transform: uppercase;
+            position: relative;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-col h5::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 35px;
+            height: 2.5px;
+            background-color: var(--brand-gold);
+        }
+
+        .copyright-bar {
+            text-align: center;
+            border-top: 1px solid #1A2232;
+            padding-top: 25px;
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .quote-btn {
+            background-color: var(--brand-gold);
+            color: var(--brand-dark);
+            border: none;
+            padding: 12px 22px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            margin-top: 5px;
+        }
+
+        .quote-btn:hover {
+            background-color: var(--white);
+            color: var(--brand-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Widgets Overlays */
+        .scroll-top-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--brand-gold);
+            color: var(--brand-dark);
+            width: 45px;
+            height: 45px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .scroll-top-widget.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top-widget:hover {
+            background-color: var(--brand-dark);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 15, 24, 0.95);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .lightbox-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .lightbox-window {
+            max-width: 85%;
+            max-height: 80%;
+            position: relative;
+        }
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border: 3px solid var(--brand-gold);
+            border-radius: 2px;
+        }
+        .lightbox-caption {
+            color: var(--white);
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--white);
+            font-size: 1.8rem;
+            cursor: pointer;
+            font-weight: 300;
+        }
+        .lightbox-close:hover {
+            color: var(--brand-gold);
+        }
+
+        .rfq-modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(14, 23, 38, 0.7);
+            z-index: 1500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .rfq-modal-mask.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .rfq-modal-box {
+            background-color: var(--white);
+            width: 100%;
+            max-width: 500px;
+            padding: 35px;
+            border-radius: 4px;
+            border-top: 6px solid var(--brand-gold);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        .rfq-modal-mask.active .rfq-modal-box {
+            transform: translateY(0);
+        }
+        .rfq-modal-box h4 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            color: var(--brand-dark);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        .rfq-modal-box p {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+        }
+        .rfq-form-group {
+            margin-bottom: 16px;
+        }
+        .rfq-form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            color: var(--brand-dark);
+            letter-spacing: 0.3px;
+        }
+        .rfq-form-group input, .rfq-form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #CBD5E0;
+            border-radius: 3px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--brand-dark);
+            outline: none;
+        }
+        .rfq-form-group input:focus, .rfq-form-group textarea:focus {
+            border-color: var(--brand-gold);
+            box-shadow: 0 0 0 2px rgba(206, 141, 42, 0.15);
+        }
+        
+        /* Interactive Validation Alert Boxes */
+        .form-message-alert {
+            display: none;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        .form-message-alert.error {
+            display: block;
+            background-color: #FED7D7;
+            color: #C53030;
+            border-left: 4px solid #C53030;
+        }
+        .form-message-alert.success {
+            display: block;
+            background-color: #C6F6D5;
+            color: #22543D;
+            border-left: 4px solid #2F855A;
+        }
+
+        .action-routing-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .rfq-submit-btn {
+            background-color: var(--brand-dark);
+            color: var(--white);
+            width: 100%;
+            padding: 12px;
+            border: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+        .rfq-submit-btn:hover {
+            background-color: var(--brand-gold);
+            color: var(--brand-dark);
+        }
+        
+        .rfq-submit-btn.whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+        }
+        .rfq-submit-btn.whatsapp-btn:hover {
+            background-color: #128C7E;
+            color: white;
+        }
+
+        .rfq-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 22px;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #A0AEC0;
+        }
+        .rfq-modal-close:hover {
+            color: var(--brand-dark);
+        }
+
+        @media (max-width: 992px) {
+            .corporate-info { flex-direction: column; align-items: flex-start; }
+            .compliance-display { width: 100%; justify-content: flex-start; }
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 20px; text-align: center; }
+            .top-bar { justify-content: center; gap: 12px; padding: 12px 4%; }
+            .logo-text h1 { font-size: 1.5rem; }
+            .logo-text .sub-title { font-size: 1.1rem; letter-spacing: 3px; }
+            .page-banner { padding: 50px 5%; text-align: center; }
+            .category-section, .intro-section, .checklist-section, .faq-section, footer { padding: 50px 5%; }
+            .compliance-display { gap: 15px; }
+            .compliance-img { max-height: 50px; }
+            .scroll-top-widget { bottom: 20px; right: 20px; width: 40px; height: 40px; }
+            .rfq-modal-box { width: 92%; padding: 25px; }
+            .action-routing-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar" id="top">
+        <div class="top-bar-left">
+            <span>⏰ Hours: Mon - Sat 09:00 AM - 05:00 PM</span>
+            <span>📞 Tel desk: +92 51 4926225</span>
+        </div>
+        <div class="top-bar-right">
+            <span>✉ Office desk: info@empiricenterprises.com</span>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo-area">
+            <img src="logo.png" alt="Empiric Enterprises Logo" class="logo-img">
+            <div class="logo-text">
+                <h1>EMPIRIC</h1>
+                <span class="sub-title">ENTERPRISES</span>
+                <span class="tagline">Trading | Engineering | General Order Suppliers</span>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#top">Home</a></li>
+                <li><a href="#inventory">Our Range</a></li>
+                <li><a href="#framework">Capabilities</a></li>
+                <li><a href="#contact">Contact Desk</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-banner">
+        <h2>Engineering & Trading Profile</h2>
+        <p>Home / Industrial Portfolio Overview</p>
+    </section>
+
+    <section class="intro-section">
+        <h3>About Our Firm</h3>
+        <p>
+            Empiric Enterprises a register firm provide best Engineering related Products (local & imported) and Services in the domain of trading, construction, inspection, fabrication, condition monitoring & diagnosis, erection & handling including supplies by using our ever growing knowledge, expertise, consultancy, world-wide suppliers & up-to-date equipment which will show Quality, Safety & System Reliability of industrial assets to keep them running in smooth way and production facilities keep going in future at their best level.
+        </p>
+    </section>
+
+    <section class="category-section" id="inventory">
+        <div class="intro-section" style="padding:0; background:transparent;">
+            <h3>Procurement & Inventory Portfolio</h3>
+        </div>
+        <div class="grid-container">
+            
+            <div class="category-card">
+                <img src="industrial cables.jfif" alt="Industrial & Power Cables" class="card-img" onclick="openLightbox(this)">
+                <div class="card-content">
+                    <h4>Industrial Cables</h4>
+                    <p>Heavy-duty power distribution wiring, multi-core industrial plant control cables, and secure armored copper/aluminum spools.</p>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <img src="raw materials.jfif" alt="Raw Materials & Minerals" class="card-img" onclick="openLightbox(this)">
+                <div class="card-content">
+                    <h4>Raw Materials & Minerals</h4>
+                    <p>Bulk coal supply chains, raw processing minerals, and essential energy resources mapped directly to heavy manufacturing sectors.</p>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <img src="Valves & Actuators.jfif" alt="Valves & Actuators" class="card-img" onclick="openLightbox(this)">
+                <div class="card-content">
+                    <h4>Valves & Actuators</h4>
+                    <p>High-pressure industrial gate valves, control ball assemblies, and precision fluid-regulation mechanical actuators.</p>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <img src="Steel & Metal Sheets.jfif" alt="Steel & Metal Sheets" class="card-img" onclick="openLightbox(this)">
+                <div class="card-content">
+                    <h4>Steel & Metal Sheets</h4>
+                    <p>Heavy structural iron plates, industrial steel sheets, raw engineering coils, and alloy cutting components.</p>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <img src="Lubricants & Oils.jfif" alt="Lubricants & Industrial Oils" class="card-img" onclick="openLightbox(this)">
+                <div class="card-content">
+                    <h4>Lubricants & Oils</h4>
+                    <p>Premium mechanical gear oils, heavy machinery lubricants, fluid coolants, and asset protection fluids.</p>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <img src="Electrical Switchgears.jfif" alt="Electrical Switchgear & Panels" class="card-img" onclick="openLightbox(this)">
+                <div class="card-content">
+                    <h4>Electrical Switchgears</h4>
+                    <p>Certified distribution breaker assemblies, plant control panels, switchgears, and power management relays.</p>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <img src="Hardware & Toolkits.jfif" alt="Hardware & Maintenance Tools" class="card-img" onclick="openLightbox(this)">
+                <div class="card-content">
+                    <h4>Hardware & Toolkits</h4>
+                    <p>Professional grade mechanical wrench configurations, industrial socket configurations, and facility tooling kits.</p>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <img src="Metal Pipings & Sections.jfif" alt="Metal Pipings & Structural Sections" class="card-img" onclick="openLightbox(this)">
+                <div class="card-content">
+                    <h4>Metal Pipings & Sections</h4>
+                    <p>Copper pipelines, high-strength structural metal tubes, hollow alloy sections, and fluid transportation channels.</p>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <img src="Safety Equipment.jfif" alt="Safety Equipment & PPE" class="card-img" onclick="openLightbox(this)">
+                <div class="card-content">
+                    <h4>Safety Equipment</h4>
+                    <p>Industrial grade safety helmets, high-visibility reflective vests, protective gloves, welding shields, and site-compliant safety boots.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="checklist-section" id="framework">
+        <h3 class="intro-section" style="padding:0; margin-bottom:20px;">Industrial Domain & Core Operations</h3>
+        <div class="checklist-container">
+            <div class="checklist-item">Mechanical Fabrication Services</div>
+            <div class="checklist-item">Plant Construction & Structural Engineering</div>
+            <div class="checklist-item">Asset Condition Monitoring & Expert Diagnosis</div>
+            <div class="checklist-item">Erection, Plant Relocation & Handling Operations</div>
+            <div class="checklist-item">Industrial Machinery Installation & Commissioning</div>
+            <div class="checklist-item">Local & Premium Imported Product Sourcing</div>
+            <div class="checklist-item">General Order Commercial Supply Management</div>
+            <div class="checklist-item">Asset System Reliability Engineering Framework</div>
+            <div class="checklist-item">FBR & PSW Regulated Safe Corporate Procurement</div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="intro-section" style="padding:0; background:transparent;">
+            <h3>Frequently Asked Questions</h3>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <button class="faq-trigger" onclick="toggleFaq(this)">
+                    <span>What areas do your solutions cover?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-content">
+                    <p style="padding-bottom: 20px;">We specialize strictly in commercial supply chains, procurement management, general order supplies, and high-quality local and imported industrial product sourcing tailored directly to manufacturing sectors.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-trigger" onclick="toggleFaq(this)">
+                    <span>Are you registered corporate suppliers?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-content">
+                    <p style="padding-bottom: 20px;">Yes, Empiric Enterprises is completely registered under FBR and PSW regulations, managing transparent corporate orders with verified NTN and GST compliance footprints.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-trigger" onclick="toggleFaq(this)">
+                    <span>How can we request an official RFQ quotation?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-content">
+                    <p style="padding-bottom: 20px;">You can open our procurement window using the "Submit Query" button in the footer to deliver technical parameters directly via Email or WhatsApp routing configurations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="corporate-info">
+        <div>
+            <h4>Government Certified Compliance Footprint</h4>
+            <p style="font-size:0.85rem; color: var(--brand-dark); font-weight: 500;">Duly registered and transparent fiscal corporate partner across regional hubs.</p>
+        </div>
+        <div class="compliance-display">
+            <img src="image_40c27e.png" alt="Government of Pakistan Emblem" class="compliance-img">
+            <img src="image_40c926.png" alt="FBR Pakistan Logo" class="compliance-img">
+            <img src="image_40c61c.png" alt="Pakistan Single Window Logo" class="compliance-img">
+            
+            <div class="tax-box">
+                <div class="tax-badge"><strong>GST #:</strong> 32-77-8762-913-86</div>
+                <div class="tax-badge"><strong>NTN #:</strong> 8865472-5</div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="contact">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h5>Our Philosophy</h5>
+                <p style="color:#718096; font-size:0.8rem; text-align: justify;">
+                    By using our ever growing knowledge, consultancy, and worldwide sourcing channels, we ensure the safety and operational endurance of essential industrial infrastructure.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h5>Main Office</h5>
+                <p>📍 Plot no. 277, Street No. 01, Sector I-9/3, Industrial Area, Islamabad - 44000, Pakistan.</p>
+                <p>📞 +92 51 4926225</p>
+                <p>✉ Sales@empricenterprises.com</p>
+                <p>✉ Info@empricenterprises.com</p>
+                <p>✉ empiric.ent@gmail.com</p>
+            </div>
+            <div class="footer-col">
+                <h5>Branch Office</h5>
+                <p>📍 Office #116, Orakzai Plaza, Near Swedish College, Wah Cantt.</p>
+                <p>📱 +92 304 5864676</p>
+                <p>✉ Sales@empricenterprises.com</p>
+                <p>✉ Info@empricenterprises.com</p>
+                <p>✉ empiric.ent@gmail.com</p>
+            </div>
+            <div class="footer-col">
+                <h5>Procurement Request</h5>
+                <p>Need dynamic quotations for targeted specifications or RFQs?</p>
+                <button class="quote-btn" onclick="toggleRFQModal(true)">Submit Query</button>
+            </div>
+        </div>
+        <div class="copyright-bar">
+            Copyright © 2026 Empiric Enterprises. All Rights Reserved | www.empiricenterprises.com
+        </div>
+    </footer>
+
+    <div class="scroll-top-widget" id="scrollTopBtn" onclick="scrollToTop()">▲</div>
+
+    <div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+        <div class="lightbox-window" onclick="event.stopPropagation()">
+            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+            <img src="" alt="Enlarged Portfolio Element" class="lightbox-img" id="lightboxImg">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+    </div>
+
+    <div class="rfq-modal-mask" id="rfqModal" onclick="toggleRFQModal(false)">
+        <div class="rfq-modal-box" onclick="event.stopPropagation()">
+            <span class="rfq-modal-close" onclick="toggleRFQModal(false)">&times;</span>
+            <h4>Request For Quotation (RFQ)</h4>
+            <p>Please provide details about your commercial procurement request.</p>
+            
+            <div id="formAlertBox" class="form-message-alert"></div>
+
+            <form id="rfqForm" novalidate>
+                <div class="rfq-form-group">
+                    <label for="rfqEmail">Corporate Email Address *</label>
+                    <input type="email" id="rfqEmail" required placeholder="name@company.com">
+                </div>
+                <div class="rfq-form-group">
+                    <label for="rfqCompany">Company Name *</label>
+                    <input type="text" id="rfqCompany" required placeholder="e.g. Attock Refinery Limited">
+                </div>
+                <div class="rfq-form-group">
+                    <label for="rfqDetails">Required Specifications / Items *</label>
+                    <textarea id="rfqDetails" rows="4" required placeholder="Mention item name, sizes, standard grades, or target quantities..."></textarea>
+                </div>
+                
+                <div class="action-routing-container">
+                    <button type="button" class="rfq-submit-btn" onclick="submitToEmail()">Send to Email</button>
+                    <button type="button" class="rfq-submit-btn whatsapp-btn" onclick="submitToWhatsApp()">Send to WhatsApp</button>
+                </div>
+            </form>
+        </div>
+    </div>
+<script>
+        // ========================================================
+// TARGETED INTEGRATION & DESTINATION SETUP VARIABLES
+        // ========================================================
+        const CONFIG_DESTINATIONS = {
+            whatsappNumber: "923045864676",
+            formspreeEndpoint: "https://formspree.io/f/xjgznpol"
+        };
+
+        // BACK TO TOP CONTROLLER LOGIC INTERACTION
+        window.onscroll = function() {
+            const btn = document.getElementById("scrollTopBtn");
+            if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+                btn.classList.add("active");
+            } else {
+                btn.classList.remove("active");
+            }
+        };
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // INTERACTIVE LIGHTBOX WINDOW HANDLERS
+        function openLightbox(element) {
+            const lightbox = document.getElementById("lightbox");
+            const lightboxImg = document.getElementById("lightboxImg");
+            const lightboxCaption = document.getElementById("lightboxCaption");
+            
+            lightboxImg.src = element.src;
+            lightboxCaption.textContent = element.alt;
+            lightbox.classList.add("active");
+        }
+
+        function closeLightbox() {
+            document.getElementById("lightbox").classList.remove("active");
+        }
+
+        // RFQ MODAL WINDOW CONTROLLER HUB
+        function toggleRFQModal(show) {
+            const modal = document.getElementById("rfqModal");
+            const alertBox = document.getElementById("formAlertBox");
+            if (show) {
+                modal.classList.add("active");
+            } else {
+                modal.classList.remove("active");
+                document.getElementById("rfqForm").reset();
+                alertBox.className = "form-message-alert";
+                alertBox.style.display = "none";
+            }
+        }
+
+        // INTERACTIVE FAQ ACCORDION LOGIC
+        function toggleFaq(button) {
+            const item = button.parentElement;
+            const content = button.nextElementSibling;
+            
+            if (item.classList.contains("active")) {
+                content.style.maxHeight = null;
+                item.classList.remove("active");
+                button.querySelector(".faq-icon").textContent = "+";
+            } else {
+                document.querySelectorAll(".faq-item").forEach(el => {
+                    el.classList.remove("active");
+                    el.querySelector(".faq-content").style.maxHeight = null;
+                    el.querySelector(".faq-icon").textContent = "+";
+                });
+
+                content.style.maxHeight = content.scrollHeight + "px";
+                item.classList.add("active");
+                button.querySelector(".faq-icon").textContent = "×";
+            }
+        }
+
+        // FORM VALIDATION GATEKEEPER IMPLEMENTATION
+        function validateRfqForm() {
+            const emailInput = document.getElementById("rfqEmail");
+            const companyInput = document.getElementById("rfqCompany");
+            const detailsInput = document.getElementById("rfqDetails");
+            const alertBox = document.getElementById("formAlertBox");
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailInput.value.trim() || !companyInput.value.trim() || !detailsInput.value.trim()) {
+                alertBox.textContent = "Error: Please fulfill all mandatory fields marked with (*).";
+                alertBox.className = "form-message-alert error";
+                return false;
+            }
+
+            if (!emailRegex.test(emailInput.value.trim())) {
+                alertBox.textContent = "Error: Please present a valid corporate email structure.";
+                alertBox.className = "form-message-alert error";
+                return false;
+            }
+
+            alertBox.style.display = "none";
+            return {
+                email: emailInput.value.trim(),
+                company: companyInput.value.trim(),
+                details: detailsInput.value.trim()
+            };
+        }
+
+        // DYNAMIC WHATSAPP TRANSACTION PROCESSING
+        function submitToWhatsApp() {
+            const formData = validateRfqForm();
+            if (!formData) return;
+
+            const textMessage = `*EMPIRIC ENTERPRISES - RFQ SUBMISSION*%0A%0A` +
+                                `*Client Email:* ${formData.email}%0A` +
+                                `*Company Name:* ${formData.company}%0A%0A` +
+                                `*Required Specifications:*%0A${formData.details}`;
+
+            const targetURL = `https://wa.me/${CONFIG_DESTINATIONS.whatsappNumber}?text=${encodeURIComponent(textMessage.replace(/%0A/g, '\n'))}`;
+            
+            window.open(targetURL, '_blank');
+            toggleRFQModal(false);
+        }
+
+        // ASYNC EMAIL AJAX TRANSPORTER PROCESSING
+        function submitToEmail() {
+            const formData = validateRfqForm();
+            if (!formData) return;
+
+            const alertBox = document.getElementById("formAlertBox");
+            alertBox.textContent = "Processing transmission... Please wait.";
+            alertBox.className = "form-message-alert success";
+
+            fetch(CONFIG_DESTINATIONS.formspreeEndpoint, {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    company: formData.company,
+                    specifications: formData.details
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alertBox.textContent = "Success! Your procurement inquiry has arrived at our endpoint desk.";
+                    alertBox.className = "form-message-alert success";
+                    setTimeout(() => toggleRFQModal(false), 2000);
+                } else {
+                    throw new Error("Formspree service rejected transaction parcel.");
+                }
+            })
+            .catch(error => {
+                console.error("Transmission breakdown:", error);
+                alertBox.textContent = "Error: Transmission route blocked. Please utilize the WhatsApp platform instead.";
+                alertBox.className = "form-message-alert error";
+            });
+        }
+
+        // ========================================================
+        // EMPIRIC AI CHATBOT LIVE SERVER CONNECTIVITY JAVASCRIPT
+        // ========================================================
+        function toggleChat() {
+            const chatWindow = document.getElementById('chat-window');
+            const chatBadge = document.getElementById('chat-badge');
+            chatWindow.classList.toggle('chat-hidden');
+            
+            if (!chatWindow.classList.contains('chat-hidden')) {
+                chatBadge.style.opacity = '0';
+                chatBadge.style.pointerEvents = 'none';
+            } else {
+                chatBadge.style.opacity = '1';
+                chatBadge.style.pointerEvents = 'auto';
+            }
+        }
+
+        // Manually badge close krne ke liye function
+        function closeChatBadge(event) {
+            event.stopPropagation(); // Taake neeche wale container par click click event trigger na ho
+            const chatBadge = document.getElementById('chat-badge');
+            chatBadge.style.opacity = '0';
+            chatBadge.style.pointerEvents = 'none';
+        }
+
+        async function sendMessage() {
+            const inputField = document.getElementById('chat-input');
+            const messageText = inputField.value.trim();
+            const sendBtn = document.getElementById('send-btn');
+            
+            if (messageText === '') return;
+
+            const messagesContainer = document.getElementById('chat-messages');
+
+            // 1. User message display on UI
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.className = 'message user-message';
+            userMessageDiv.textContent = messageText;
+            messagesContainer.appendChild(userMessageDiv);
+
+            // Interface components locked down temporarily during fetch execution
+            inputField.value = '';
+            inputField.disabled = true;
+            sendBtn.disabled = true;
+            sendBtn.textContent = "...";
+
+            // 2. Transporter delay loader visibility trigger
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot-message';
+            loadingDiv.id = 'loading-msg';
+            loadingDiv.textContent = "Empiric AI is thinking...";
+            messagesContainer.appendChild(loadingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                // 3. Forward request parameters to active endpoint pipeline
+                const response = await fetch('http://127.0.0.1:5000/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: messageText })
+                });
+
+                const data = await response.json();
+
+                // Clear placeholder loader
+                const tempMsg = document.getElementById('loading-msg');
+                if (tempMsg) tempMsg.remove();
+
+                // 4. Extract content and output clean parsed strings
+                const botMessageDiv = document.createElement('div');
+                botMessageDiv.className = 'message bot-message';
+                botMessageDiv.innerHTML = data.reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                messagesContainer.appendChild(botMessageDiv);
+
+            } catch (error) {
+                console.error("Transmission breakdown:", error);
+                const tempMsg = document.getElementById('loading-msg');
+                if (tempMsg) tempMsg.remove();
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'message bot-message';
+                errorDiv.textContent = "Sorry, I'm having trouble connecting to my brain (Python Server). Make sure app.py is running!";
+                messagesContainer.appendChild(errorDiv);
+            }
+
+            // Restore terminal interface states
+            inputField.disabled = false;
+            sendBtn.disabled = false;
+            sendBtn.textContent = "Send";
+            inputField.focus();
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+
+    <style>
+        #chat-widget-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Enhanced Premium Badge Style */
+        #chat-badge {
+            background: linear-gradient(135deg, #b37d14 0%, #c98d19 100%);
+            color: #ffffff;
+            padding: 10px 32px 10px 16px; /* Right padding extra for cross button */
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 20px rgba(179, 125, 20, 0.3), 0 2px 5px rgba(0,0,0,0.2);
+            white-space: nowrap;
+            position: relative;
+            transition: all 0.3s ease;
+            animation: floatBadge 3.5s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            letter-spacing: 0.3px;
+        }
+        
+        /* Badge Close Cross Button Style */
+        #badge-close-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            cursor: pointer;
+            padding: 2px;
+            line-height: 1;
+            transition: color 0.2s ease;
+        }
+        
+        #badge-close-btn:hover {
+            color: #ffffff;
+        }
+
+        /* Gold Arrow Indicator pointing down to chat button */
+        #chat-badge::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            right: 22px;
+            border-width: 6px 6px 0;
+            border-style: solid;
+            border-color: #c98d19 transparent;
+            display: block;
+            width: 0;
+        }
+
+        @keyframes floatBadge {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+    </style>
+
+    <div id="chat-widget-container">
+        <div id="chat-badge">
+            Need help? Ask Empiric AI
+            <button id="badge-close-btn" onclick="closeChatBadge(event)">✕</button>
+        </div>
+
+        <button id="chat-toggle-btn" onclick="toggleChat()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </button>
+
+        <div id="chat-window" class="chat-hidden">
+            <div id="chat-header">
+                <h3>Empiric AI</h3>
+                <button id="close-chat-btn" onclick="toggleChat()">✕</button>
+            </div>
+            <div id="chat-messages">
+                <div class="message bot-message">
+                    Welcome to <strong>Empiric Enterprises</strong>! I am your AI assistant. How can I help you with our trading and supply services today?
+                </div>
+            </div>
+            <div id="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Ask about products, orders..." onkeypress="handleKeyPress(event)">
+                <button id="send-btn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
