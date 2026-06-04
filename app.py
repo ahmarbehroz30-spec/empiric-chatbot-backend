@@ -8,9 +8,8 @@ app = Flask(__name__)
 CORS(app)  # Taake aapki website aur yeh Python server aapas mein bina kisi error ke baat kar sakein
 
 # 1. API Key Setup aur Client Initialization
-# Directly passing your provided Gemini API Key
-GEMINI_API_KEY = "AQ.Ab8RN6KTnPdlLDiMzyDJPDv_vHxoaXVCFafP5jKM60cQr2dQ-g"
-client = genai.Client(api_key=GEMINI_API_KEY)
+# Render ke Environment Variables se automatic sahi aur live API Key uthane ke liye
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 # 2. Empiric AI Salesman Mode (System Instruction) Define Karna
 # Is instruction se AI har product inquiry par positive lead generate karega
